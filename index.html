@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>News English Lab</title>
+  <style>
+    :root{--bg:#f6f7f3;--card:#fff;--ink:#1f2933;--muted:#6b7280;--line:#e5e7eb;--accent:#244b3b;--accent2:#e9f1ec;--warn:#7c5d10;--warnbg:#fff7dd;}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--ink)}
+    .app{max-width:560px;margin:auto;min-height:100vh;padding-bottom:88px}.top{padding:20px 18px 12px}.brand{font-weight:800;font-size:22px;letter-spacing:.2px}.sub{color:var(--muted);font-size:13px;margin-top:3px}
+    .notice{margin:8px 18px 14px;background:var(--warnbg);border:1px solid #edd88f;border-radius:14px;padding:12px 13px;font-size:12px;line-height:1.55;color:#5f4a12}
+    .filters{display:flex;gap:8px;overflow:auto;padding:0 18px 12px}.chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:13px}.chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .section{padding:0 18px}.section h2{font-size:15px;margin:12px 0}.cards{display:grid;gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+    .meta{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted);margin-bottom:8px}.badge{background:var(--accent2);color:var(--accent);padding:4px 7px;border-radius:999px;font-weight:700}.title{font-size:17px;font-weight:800;line-height:1.4}.desc{font-size:13px;color:var(--muted);line-height:1.55;margin-top:7px}.cta{margin-top:12px;width:100%;border:0;border-radius:12px;padding:11px 12px;background:var(--accent);color:#fff;font-weight:800}
+    .screen{display:none}.screen.active{display:block}.back{border:0;background:transparent;font-size:15px;padding:8px 0;color:var(--accent);font-weight:700}.lesson{padding:0 18px}.jp{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;line-height:1.7;font-size:14px}.en{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;line-height:1.8;font-size:16px}.word{border-bottom:2px dotted #9aa7a0;cursor:pointer}.tip{font-size:12px;color:var(--muted);margin:8px 2px}.q{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px}.q h3{font-size:14px;margin:0 0 10px}.opt{display:block;width:100%;text-align:left;padding:11px 12px;margin:7px 0;border:1px solid var(--line);border-radius:11px;background:#fff}.opt.correct{border-color:#7fa18e;background:#edf6f0}.opt.wrong{border-color:#d5a2a2;background:#fff0f0}.explain{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px}.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);border-top:1px solid var(--line);backdrop-filter:blur(8px)}.nav{max-width:560px;margin:auto;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom));font-size:11px;color:var(--muted)}.nav b{color:var(--accent)}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{width:min(560px,100%);background:#fff;border-radius:22px 22px 0 0;padding:20px}.sheet h3{margin:0 0 8px}.sheet p{margin:6px 0;color:var(--muted);line-height:1.5}.close{width:100%;margin-top:12px;border:0;border-radius:12px;padding:11px;background:var(--accent);color:#fff;font-weight:800}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div id="home" class="screen active">
+    <div class="top"><div class="brand">News English Lab</div><div class="sub">最近の話題から、TOEICにつながる英語を。</div></div>
+    <div class="notice"><b>安全モード：</b>このデモは外部ニュースを自動取得しません。スクレイピング、RSS取得、ニュースAPI呼び出しは実装していません。表示内容はすべてアプリ内のオリジナル例文です。</div>
+    <div class="filters"><button class="chip active">おすすめ</button><button class="chip">日本</button><button class="chip">海外</button><button class="chip">ビジネス</button><button class="chip">テクノロジー</button><button class="chip">生活</button></div>
+    <div class="section"><h2>学習サンプル</h2><div id="cards" class="cards"></div></div>
+  </div>
+  <div id="lesson" class="screen">
+    <div class="lesson">
+      <button class="back" onclick="goHome()">← 戻る</button>
+      <div id="lessonMeta" class="meta"></div>
+      <div id="lessonTitle" class="title"></div>
+      <p class="tip">まず日本語でテーマを確認してから、英文を読んでみましょう。</p>
+      <div id="jp" class="jp"></div>
+      <div id="en" class="en"></div>
+      <p class="tip">点線の単語をタップすると意味を確認できます。</p>
+      <div id="questions"></div>
+    </div>
+  </div>
+</div>
+<div class="bottom"><div class="nav"><b>ホーム</b><span>学習</span><span>単語</span><span>記録</span></div></div>
+<div id="modal" class="modal" onclick="if(event.target===this) closeModal()"><div class="sheet"><h3 id="mWord"></h3><p id="mMeaning"></p><p id="mNote"></p><button class="close" onclick="closeModal()">閉じる</button></div></div>
+<script>
+const lessons=[
+ {cat:'テクノロジー',age:'サンプル',level:'TOEIC 600前後',title:'企業が社内向けAIツールを導入',jp:'ある企業が、社員の情報検索や文書作成を助ける社内向けAIツールを導入した、という想定の学習テーマです。実在の記事本文は使用していません。',en:'A company has introduced an internal AI tool to help employees <span class="word" data-m="効率的に" data-n="副詞。TOEICでも頻出の efficiently。">efficiently</span> search for information and prepare documents. The company expects the tool to reduce routine work and allow staff to focus on more complex tasks.',qs:[['Why did the company introduce the tool?',['To reduce routine work','To close its offices','To hire more drivers'],0,'reduce routine work が本文に明示されています。'],['The word “efficiently” is closest in meaning to:',['slowly','effectively','rarely'],1,'efficiently は「効率よく」の意味です。']]},
+ {cat:'ビジネス',age:'サンプル',level:'TOEIC 650前後',title:'小売店が受取サービスを拡大',jp:'小売店が、オンライン注文商品の受取場所を増やした、という想定テーマです。これは教材用のオリジナル内容です。',en:'A retail chain has expanded its pickup service to more locations. Customers can place orders online and <span class="word" data-m="受け取る" data-n="collect は「集める」だけでなく「受け取る」の意味でも使われます。">collect</span> their purchases at a nearby store. The company says the change is intended to make shopping more convenient for busy customers.',qs:[['What can customers do?',['Pick up online orders at more stores','Return any product without a receipt','Use the service only at night'],0,'pickup service to more locations がポイントです。']]},
+ {cat:'生活',age:'サンプル',level:'TOEIC 550前後',title:'地域施設が営業時間を延長',jp:'地域施設が利用者の要望を受けて営業時間を延長した、という想定の学習テーマです。',en:'A community center will stay open one hour later on weekdays. The change was made after many visitors <span class="word" data-m="要望した" data-n="request は名詞・動詞の両方で頻出。">requested</span> more evening access. The new schedule will begin next month.',qs:[['When will the new schedule begin?',['Next week','Next month','Next year'],1,'The new schedule will begin next month. とあります。']]}
+];
+const cards=document.getElementById('cards');
+lessons.forEach((l,i)=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class="meta"><span class="badge">${l.cat}</span><span>${l.age}</span><span>${l.level}</span></div><div class="title">${l.title}</div><div class="desc">約3〜5分。短い英文＋TOEIC風問題。</div><button class="cta" onclick="openLesson(${i})">このテーマで学ぶ</button>`;cards.appendChild(d)});
+function openLesson(i){const l=lessons[i];document.getElementById('home').classList.remove('active');document.getElementById('lesson').classList.add('active');document.getElementById('lessonMeta').innerHTML=`<span class="badge">${l.cat}</span><span>${l.level}</span>`;document.getElementById('lessonTitle').textContent=l.title;document.getElementById('jp').textContent=l.jp;document.getElementById('en').innerHTML=l.en;document.querySelectorAll('.word').forEach(w=>w.onclick=()=>showWord(w.textContent,w.dataset.m,w.dataset.n));const qwrap=document.getElementById('questions');qwrap.innerHTML='';l.qs.forEach((q,qi)=>{const box=document.createElement('div');box.className='q';box.innerHTML=`<h3>Q${qi+1}. ${q[0]}</h3>`;q[1].forEach((o,oi)=>{const b=document.createElement('button');b.className='opt';b.textContent=o;b.onclick=()=>answer(b,oi,q[2],box,q[3]);box.appendChild(b)});qwrap.appendChild(box)});scrollTo(0,0)}
+function answer(btn,sel,ans,box,exp){box.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(i===ans)b.classList.add('correct');else if(i===sel)b.classList.add('wrong')});const e=document.createElement('div');e.className='explain';e.textContent=exp;box.appendChild(e)}
+function goHome(){document.getElementById('lesson').classList.remove('active');document.getElementById('home').classList.add('active');scrollTo(0,0)}
+function showWord(w,m,n){document.getElementById('mWord').textContent=w;document.getElementById('mMeaning').textContent='意味：'+m;document.getElementById('mNote').textContent=n;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+</script>
+</body>
+</html>
